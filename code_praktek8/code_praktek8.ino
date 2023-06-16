@@ -10,7 +10,7 @@ ESP8266WiFiMulti WiFiMulti;
 WiFiClient client;
 HTTPClient http;
 
-String urlGetData = "http://192.168.22.243/praktek8-rfid-with-arduino-json/index.php";
+String urlGetData = "http://172.16.7.158/praktek8-rfid-with-arduino-json/index.php";
 String respon;
 
 // buzzer
@@ -18,7 +18,7 @@ String respon;
 
 // lcd
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x3F, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // SDA ---------------> D2
 // SCL ---------------> D1
@@ -56,6 +56,9 @@ void setup() {
 
   pinMode(pinBuzzer, OUTPUT);
   digitalWrite(pinBuzzer, LOW);
+
+  SPI.begin(); //
+  mfrc522.PCD_Init();
   
   lcd.init();
   lcd.backlight();
@@ -119,6 +122,7 @@ void loop() {
   }
 
   no_kartu = content.substring(1);
+  no_kartu.toUpperCase();
   
   lcd.setCursor(0, 1);
   lcd.print(no_kartu);

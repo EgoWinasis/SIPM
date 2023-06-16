@@ -1,6 +1,6 @@
 <?php
 $data = [
-	'kartu_1' => '4E MM 2K OM',
+	'kartu_1' => '9A C9 8E 19',
 	'kartu_2' => 'PO LT EK HB'
 ];
 
