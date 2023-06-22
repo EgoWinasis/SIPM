@@ -10,7 +10,7 @@ ESP8266WiFiMulti WiFiMulti;
 WiFiClient client;
 HTTPClient http;
 
-String urlGetData = "http://172.16.7.158/praktek8-rfid-with-arduino-json/index.php";
+String urlGetData = "http://192.168.188.146/praktek8-rfid-with-arduino-json/index.php";
 String respon;
 
 // buzzer
@@ -52,7 +52,7 @@ void setup() {
   WiFi.mode(WIFI_STA);
   Serial.begin(115200);
   
-  WiFiMulti.addAP("Harapan Bersama", "poltekharber"); // Sesuaikan SSID dan password ini
+  WiFiMulti.addAP("POCO M5", "uwiw2000!"); // Sesuaikan SSID dan password ini
 
   pinMode(pinBuzzer, OUTPUT);
   digitalWrite(pinBuzzer, LOW);
@@ -234,4 +234,34 @@ void getData() {
     }
     http.end();
   }
+}
+
+void sendData(id){
+// Send RFID value to CodeIgniter controller
+  String rfid = id; // Replace with the actual RFID value
+
+  // Prepare the HTTP request
+  HTTPClient http;
+  http.begin("http://your_codeigniter_url/controller/check_rfid"); // Replace with the actual URL of your CodeIgniter controller
+
+  // Set the POST parameters
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  String postData = "rfid=" + rfid;
+  
+  // Send the POST request
+  int httpResponseCode = http.POST(postData);
+
+  // Check the response
+  if (httpResponseCode == HTTP_CODE_OK) {
+    String response = http.getString();
+    Serial.println("Server response: " + response);
+  } else {
+    Serial.print("Error sending request. HTTP response code: ");
+    Serial.println(httpResponseCode);
+  }
+
+  // Cleanup
+  http.end();
+
+
 }
