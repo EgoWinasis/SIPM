@@ -48,9 +48,15 @@
         if (!empty($userExist)) {
             $this->db->set('id_user', $userExist[0]['id']);
             $this->db->insert('kehadiran');
-            echo $rfidData;
+            
+            $data = [
+                'nama' => $userExist[0]['nama'],
+                'nim' => $userExist[0]['nim'],
+        
+            ];
+            echo json_encode($data);
         } else {
-            echo "null";
+            echo "false";
         }
         // var_dump($userExist);
         // var_dump($presensiExist);

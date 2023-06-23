@@ -4,6 +4,7 @@
     public function index()
     {
         $data['title'] = "Data Mahasiswa";
+        $this->db->order_by("nama", "asc");
         $data['siswa'] = $this->db->get('user')->result_array();
         $this->load->view('templates/v_header', $data);
         $this->load->view('templates/v_sidebar');
