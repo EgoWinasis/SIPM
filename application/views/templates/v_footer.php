@@ -47,6 +47,13 @@
             }
         });
     }
+
+    $('#refreshBtn').click(function() {
+        location.reload();
+    });
+    $(document).ready(function() {
+        $('#tablePresensi').DataTable();
+    });
 </script>
 </body>
 

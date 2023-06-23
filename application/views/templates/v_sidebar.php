@@ -2,7 +2,7 @@
    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
        <!-- Sidebar - Brand -->
-       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url() ?>">
            <div class="sidebar-brand-icon rotate-n-15">
                <i class="fas fa-2x fa-fingerprint"></i>
            </div>
@@ -15,7 +15,7 @@
        <hr class="sidebar-divider my-0">
 
        <!-- Nav Item - Dashboard -->
-       <li class="nav-item <?php if($this->uri->segment(2) == '') echo 'active' ?>">
+       <li class="nav-item <?php if($this->uri->segment(1) == '') echo 'active' ?>">
            <a class="nav-link" href="<?= base_url() ?>">
                <i class="fas fa-fw fa-tachometer-alt"></i>
                <span>Dashboard</span></a>
@@ -31,7 +31,7 @@
 
        <!-- Nav Item - Pages Collapse Menu -->
        
-       <li class="nav-item <?php if($this->uri->segment(2) == 'mahasiswa') echo 'active' ?>">
+       <li class="nav-item <?php if($this->uri->segment(1) == 'mahasiswa') echo 'active' ?>">
            <a class="nav-link" href="<?= base_url('mahasiswa') ?>">
                <i class="fas fa-fw fa-user"></i>
                <span>Data Mahasiswa</span></a> 

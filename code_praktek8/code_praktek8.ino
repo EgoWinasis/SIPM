@@ -10,9 +10,9 @@ ESP8266WiFiMulti WiFiMulti;
 WiFiClient client;
 HTTPClient http;
 
-String urlGetData = "http://192.168.188.146/praktek8-rfid-with-arduino-json/index.php";
+//String urlGetData = "http://192.168.188.146/praktek8-rfid-with-arduino-json/index.php";
 String respon;
-
+String id;
 // buzzer
 #define pinBuzzer D0
 
@@ -84,14 +84,14 @@ void setup() {
   lcd.setCursor(2, 1);
   lcd.print("CONNECTED!!!");
 
-  getData();
+//  getData();
 
   delay(1000);
 }
 
 void loop() {
   if ((millis() - lastTime) > timerDelay) {
-    getData();
+    //getData();
 
     lcd.clear();
     lastTime = millis();
@@ -99,7 +99,6 @@ void loop() {
 
   lcd.setCursor(0, 0);
   lcd.print("PEMBACAAN KARTU");
-  
   if (!mfrc522.PICC_IsNewCardPresent())
   {
     return;
@@ -123,126 +122,132 @@ void loop() {
 
   no_kartu = content.substring(1);
   no_kartu.toUpperCase();
+//
+  Serial.println();
+  if(!(no_kartu == "")){
+    id = no_kartu;
+     sendData();
+  }
   
+//  
   lcd.setCursor(0, 1);
-  lcd.print(no_kartu);
+  lcd.println(no_kartu);
   
   Serial.println();
 
-  if (no_kartu == kartu_1) {
-    Serial.println("Kartu anda adalah Kartu 1");
-    
-    digitalWrite(pinBuzzer, HIGH);
-    delay(250);
-    digitalWrite(pinBuzzer, LOW);
-    delay(200);
-    digitalWrite(pinBuzzer, HIGH);
-    delay(250);
-    digitalWrite(pinBuzzer, LOW);
-  } else if (no_kartu == kartu_2) {
-    Serial.println("Kartu anda adalah Kartu 2");
-
-    digitalWrite(pinBuzzer, HIGH);
-    delay(250);
-    digitalWrite(pinBuzzer, LOW);
-    delay(200);
-    digitalWrite(pinBuzzer, HIGH);
-    delay(250);
-    digitalWrite(pinBuzzer, LOW);
-  } else {
-    Serial.println("Kartu anda tidak cocok");
-    
-    digitalWrite(pinBuzzer, HIGH);
-    delay(1000);
-    digitalWrite(pinBuzzer, LOW);
-    delay(300);
-    digitalWrite(pinBuzzer, HIGH);
-    delay(1000);
-    digitalWrite(pinBuzzer, LOW);
-  }
+//  if (no_kartu == kartu_1) {
+//    Serial.println("Kartu anda adalah Kartu 1");
+//    
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(250);
+//    digitalWrite(pinBuzzer, LOW);
+//    delay(200);
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(250);
+//    digitalWrite(pinBuzzer, LOW);
+//  } else if (no_kartu == kartu_2) {
+//    Serial.println("Kartu anda adalah Kartu 2");
+//
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(250);
+//    digitalWrite(pinBuzzer, LOW);
+//    delay(200);
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(250);
+//    digitalWrite(pinBuzzer, LOW);
+//  } else {
+//    Serial.println("Kartu anda tidak cocok");
+//    
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(1000);
+//    digitalWrite(pinBuzzer, LOW);
+//    delay(300);
+//    digitalWrite(pinBuzzer, HIGH);
+//    delay(1000);
+//    digitalWrite(pinBuzzer, LOW);
+//  }
 
   Serial.println();
 
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("PEMBACAAN KARTU");
-
   delay(1000);
 }
 
-void getData() {
-  if ((WiFiMulti.run() == WL_CONNECTED))
-  {
-    USE_SERIAL.print("[HTTP] Memulai...\n");
-    
-    http.begin( client, urlGetData );
-    
-    USE_SERIAL.print("[HTTP] Ambil data di server ...\n");
-    int httpCode = http.GET();
+//void getData() {
+//  if ((WiFiMulti.run() == WL_CONNECTED))
+//  {
+//    USE_SERIAL.print("[HTTP] Memulai...\n");
+//    
+//    http.begin( client, urlGetData );
+//    
+//    USE_SERIAL.print("[HTTP] Ambil data di server ...\n");
+//    int httpCode = http.GET();
+//
+//    if(httpCode > 0)
+//    {
+//      USE_SERIAL.printf("[HTTP] kode response GET : %d\n", httpCode);
+//
+//      if (httpCode == HTTP_CODE_OK) // code 200
+//      {
+//        respon = http.getString();
+//
+//        Serial.println();
+//        Serial.println("Respon : " + respon);
+//        Serial.println();
+//
+//        int str_len = respon.length() + 1;
+//        char json[str_len];
+//        
+//        respon.toCharArray(json, str_len);
+//
+//        DynamicJsonDocument doc(1024);
+//        deserializeJson(doc, json);
+//
+//        String krt_1 = doc["kartu_1"];
+//        kartu_1 = krt_1;
+//
+//        String krt_2 = doc["kartu_2"];
+//        kartu_2 = krt_2;
+//
+//        Serial.println("Kartu 1 : " + kartu_1);
+//        Serial.println("Kartu 2 : " + kartu_2);
+//
+//        Serial.println();
+//
+//        lcd.clear();
+//        lcd.setCursor(0, 0);
+//        lcd.print("KARTU 1");
+//        lcd.setCursor(0, 1);
+//        lcd.print(kartu_1);
+//
+//        delay(2000);
+//
+//        lcd.clear();
+//        lcd.setCursor(0, 0);
+//        lcd.print("KARTU 2");
+//        lcd.setCursor(0, 1);
+//        lcd.print(kartu_2);
+//
+//        delay(2000);
+//      }
+//    }
+//    else
+//    {
+//      USE_SERIAL.printf("[HTTP] GET data gagal, error: %s\n", http.errorToString(httpCode).c_str());
+//    }
+//    http.end();
+//  }
+//}
 
-    if(httpCode > 0)
-    {
-      USE_SERIAL.printf("[HTTP] kode response GET : %d\n", httpCode);
-
-      if (httpCode == HTTP_CODE_OK) // code 200
-      {
-        respon = http.getString();
-
-        Serial.println();
-        Serial.println("Respon : " + respon);
-        Serial.println();
-
-        int str_len = respon.length() + 1;
-        char json[str_len];
-        
-        respon.toCharArray(json, str_len);
-
-        DynamicJsonDocument doc(1024);
-        deserializeJson(doc, json);
-
-        String krt_1 = doc["kartu_1"];
-        kartu_1 = krt_1;
-
-        String krt_2 = doc["kartu_2"];
-        kartu_2 = krt_2;
-
-        Serial.println("Kartu 1 : " + kartu_1);
-        Serial.println("Kartu 2 : " + kartu_2);
-
-        Serial.println();
-
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("KARTU 1");
-        lcd.setCursor(0, 1);
-        lcd.print(kartu_1);
-
-        delay(2000);
-
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("KARTU 2");
-        lcd.setCursor(0, 1);
-        lcd.print(kartu_2);
-
-        delay(2000);
-      }
-    }
-    else
-    {
-      USE_SERIAL.printf("[HTTP] GET data gagal, error: %s\n", http.errorToString(httpCode).c_str());
-    }
-    http.end();
-  }
-}
-
-void sendData(id){
+void sendData(){
 // Send RFID value to CodeIgniter controller
   String rfid = id; // Replace with the actual RFID value
 
   // Prepare the HTTP request
   HTTPClient http;
-  http.begin("http://your_codeigniter_url/controller/check_rfid"); // Replace with the actual URL of your CodeIgniter controller
+  http.begin(client, "http://192.168.188.146/praktek8-rfid-with-arduino-json/presensi/add/"); // Replace with the actual URL of your CodeIgniter controller
 
   // Set the POST parameters
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -255,6 +260,20 @@ void sendData(id){
   if (httpResponseCode == HTTP_CODE_OK) {
     String response = http.getString();
     Serial.println("Server response: " + response);
+    if(rfid == response){
+      Serial.println("Kartu = " + response + " terdaftar di database");
+      Serial.println("Presensi berhasil");
+      digitalWrite(pinBuzzer, HIGH);
+      delay(250);
+      digitalWrite(pinBuzzer, LOW);
+      delay(200);
+      digitalWrite(pinBuzzer, HIGH);
+      delay(250);
+      digitalWrite(pinBuzzer, LOW);
+    }else{
+      Serial.println("Kartu = " + rfid + " tidak terdaftar di database");
+      Serial.println("Presensi gagal");
+    }
   } else {
     Serial.print("Error sending request. HTTP response code: ");
     Serial.println(httpResponseCode);

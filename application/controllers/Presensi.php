@@ -4,32 +4,56 @@
     public function index()
     {
         $data['title'] = "Dashboard";
-        $this->load->view('templates/v_header',$data);
+        $data['presensi'] = $this->db->get('kehadiran')->num_rows();
+        $data['mahasiswa'] = $this->db->get('user')->num_rows();
+        $this->load->view('templates/v_header', $data);
         $this->load->view('templates/v_sidebar');
         $this->load->view('templates/v_navbar');
-        $this->load->view('presensi/dashboard');
+        $this->load->view('presensi/dashboard',$data);
         $this->load->view('templates/v_footer');
     }
     public function presensi()
     {
-        $id = 1;
         $data['title'] = "Data Presensi Mahasiswa";
         $this->db->select('*');
-        $this->db->from('user as u');
-        $this->db->join('kehadiran', 'kehadiran.id_user = u.id');
-        $this->db->where('u.id', $id);
+        $this->db->from('user');
+        $this->db->join('kehadiran', 'user.id = kehadiran.id_user', 'inner');
+        $this->db->order_by("timestamp", "desc");
         $data['presensi'] = $this->db->get()->result_array();
-        $this->load->view('templates/v_header',$data);
+        $this->load->view('templates/v_header', $data);
         $this->load->view('templates/v_sidebar');
         $this->load->view('templates/v_navbar');
-        $this->load->view('presensi/v_presensi',$data);
+        $this->load->view('presensi/v_presensi', $data);
         $this->load->view('templates/v_footer');
     }
 
-    public function add(){
-       $id_card = $this->uri->segment(3);
+    public function add()
+    {
+        $rfidData = $this->input->post('rfid');
+        // $rfidData = '0A 69 A0 1B';
 
-       var_dump($id_card);
-       die();
+        // $timestamp = now();
+        // $formattedTimestamp = date('Y/m/d H:i:s', $timestamp);
+
+        $userExist = $this->db->select('*')->from('user')->where('id_card', $rfidData)->get()->result_array();
+
+        // $presensiExist = $this->db->select('*')->from('kehadiran')->where('id_user', $userExist[0]['id'])->get()->result_array();
+
+        // if (empty($presensiExist)) {
+        //     $this->db->set('id_user', $userExist[0]['id']);
+        //     $this->db->insert('kehadiran');
+        //     echo "data disimpan";
+        // }
+
+        if (!empty($userExist)) {
+            $this->db->set('id_user', $userExist[0]['id']);
+            $this->db->insert('kehadiran');
+            echo $rfidData;
+        } else {
+            echo "null";
+        }
+        // var_dump($userExist);
+        // var_dump($presensiExist);
+
     }
 }
